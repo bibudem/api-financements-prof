@@ -9,8 +9,7 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "generer": "node src/generer.js",
-    "test": "node --test test/"
+    "generer": "node src/generer.js"
   },
   "dependencies": {
     "express": "^5.3.0",

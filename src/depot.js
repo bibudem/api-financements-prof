@@ -1,6 +1,6 @@
 'use strict';
 const fs = require('node:fs');
-const { normaliserCourriel, comparerFinancements } = require('./commun');
+const { normaliserCourriel, comparerFinancements, dateLocale } = require('./commun');
 
 /**
  * Index { courriel -> financements triés }. En mode développement (sans
@@ -37,29 +37,32 @@ function construireIndex(financements) {
 class Depot {
   #chemin;
   #journal;
+  #fuseau;
   #index = null;
   #etat = { pret: false };
 
-  constructor(chemin, { journal = console } = {}) {
+  constructor(chemin, { journal = console, fuseau } = {}) {
     this.#chemin = chemin;
     this.#journal = journal;
+    this.#fuseau = fuseau;
   }
 
   /** Lève une erreur si le fichier est absent ou invalide. */
   charger() {
-    const stat = fs.statSync(this.#chemin);
-    const donnees = JSON.parse(fs.readFileSync(this.#chemin, 'utf8'));
-    if (!Array.isArray(donnees)) throw new Error('le fichier doit contenir un tableau JSON');
+    const { miseAJour, financements: donnees } = JSON.parse(fs.readFileSync(this.#chemin, 'utf8')) ?? {};
+    if (typeof miseAJour !== 'string' || !Array.isArray(donnees)) {
+      throw new Error('format attendu : { "miseAJour": "...", "financements": [...] }');
+    }
 
     const { index, ignores } = construireIndex(donnees);
     // Remplacement en un seul coup : une requête voit l'ancien ou le nouvel index, jamais un mélange.
     this.#index = index;
     this.#etat = {
       pret: true,
+      miseAJour,
       financements: donnees.length,
       personnes: index.size,
-      modifieLe: stat.mtime.toISOString(),
-      chargeLe: new Date().toISOString(),
+      chargeLe: dateLocale(new Date(), this.#fuseau),
     };
     this.#journal.log(
       `${donnees.length} financements chargés (${index.size} personnes` +
@@ -100,7 +103,7 @@ class Depot {
   }
 
   trouver(identifiant) {
-    return this.#index?.get(identifiant) ?? [];
+    return { miseAJour: this.#etat.miseAJour, financements: this.#index?.get(identifiant) ?? [] };
   }
 }
 

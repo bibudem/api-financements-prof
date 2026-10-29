@@ -11,7 +11,7 @@ async function demarrer() {
     await executerGeneration(config);
   }
 
-  const depot = new Depot(config.fichierFinancements);
+  const depot = new Depot(config.fichierFinancements, { fuseau: config.fuseauHoraire });
   depot.charger();
   depot.surveiller(config.intervalleSurveillanceMs);
 

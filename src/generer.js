@@ -11,7 +11,7 @@
 const fsp = require('node:fs/promises');
 const path = require('node:path');
 const { parseArgs } = require('node:util');
-const { nettoyer, comparerFinancements } = require('./commun');
+const { nettoyer, comparerFinancements, dateLocale } = require('./commun');
 const { parcourirXml, enfants, texteDe, chargerTable } = require('./xml');
 const { chargerProfesseurs } = require('./rh');
 const { resoudreFichier } = require('./fichiers');
@@ -117,6 +117,7 @@ async function executerGeneration({
   rhPositionMatricule,
   rhZoneCourriel,
   minProfesseurs = 0,
+  fuseauHoraire,
   journal = console,
 }) {
   const organisme = resoudreFichier(fichierOrganisme);
@@ -146,7 +147,8 @@ async function executerGeneration({
   }
 
   const resultat = await genererFinancements({ organisme, programme, vitrine, professeurs, annees });
-  await ecrireAtomique(fichierFinancements, JSON.stringify(resultat.financements, null, 2));
+  const contenu = { miseAJour: dateLocale(new Date(), fuseauHoraire), financements: resultat.financements };
+  await ecrireAtomique(fichierFinancements, JSON.stringify(contenu, null, 2));
   journal.log(
     `${resultat.financements.length} financements retenus sur ${resultat.total} ` +
       `(${resultat.organismes} organismes, ${resultat.programmes} programmes) -> ${fichierFinancements}`

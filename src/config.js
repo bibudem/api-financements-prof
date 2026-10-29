@@ -37,9 +37,9 @@ module.exports = {
   httpsCertificat: env.HTTPS_CERTIFICAT ? chemin(env.HTTPS_CERTIFICAT) : null,
   httpsCle: env.HTTPS_CLE ? chemin(env.HTTPS_CLE) : null,
 
-  fichierOrganisme: donnee(env.FICHIER_ORGANISME, 'organisme.xml'),
-  fichierProgramme: donnee(env.FICHIER_PROGRAMME, 'programme.xml'),
-  fichierVitrine: donnee(env.FICHIER_VITRINE, 'vitrine.xml'),
+  fichierOrganisme: donnee(env.FICHIER_ORGANISME),
+  fichierProgramme: donnee(env.FICHIER_PROGRAMME),
+  fichierVitrine: donnee(env.FICHIER_VITRINE),
   // Vide (FICHIER_SYNCHRO_RH=) : mode développement, sans filtre sur les professeurs.
   fichierSynchroRh: env.FICHIER_SYNCHRO_RH === '' ? null : donnee(env.FICHIER_SYNCHRO_RH, 'synchro_PERSONNEL_*.txt'),
 
@@ -49,6 +49,7 @@ module.exports = {
 
   fichierFinancements: chemin(env.FICHIER_FINANCEMENTS || 'financements.json'),
   annees: entier(env.ANNEES, 5),
+  fuseauHoraire: env.FUSEAU_HORAIRE || 'America/Toronto', // heure de Montréal
 
   intervalleSurveillanceMs: entier(env.INTERVALLE_SURVEILLANCE_MS, 5000),
   corsOrigine: env.CORS_ORIGINE ?? '*',

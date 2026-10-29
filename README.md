@@ -5,8 +5,11 @@ Expose les financements de recherche récents (Synchro Recherche) d'une personne
 
 | Requête | Réponse |
 |---|---|
-| `GET /financements/{courriel}` | Financements triés par année de fin décroissante (`[]` si inconnu, `400` si courriel invalide) |
-| `GET /financements/sante` | État du service (nombre de financements, date de chargement) |
+| `GET /financements/{courriel}` | `{ "miseAJour": "…", "financements": [...] }`, financements triés par année de fin décroissante (liste vide si inconnu, `400` si courriel invalide) |
+| `GET /financements/sante` | État du service (date de mise à jour, nombre de financements) |
+
+`miseAJour` est la date de la dernière génération des données (`npm run generer`),
+à l'heure de Montréal au format ISO 8601, par exemple `2026-10-29T16:04:03-04:00`.
 
 | Environnement | Adresse |
 |---|---|
@@ -22,7 +25,6 @@ npm install
 cp .env.example .env   # adapter les chemins des fichiers
 npm run generer        # fichiers Synchro -> financements.json
 npm start
-npm test
 ```
 
 Toute la configuration est dans `.env` ; chaque variable est décrite dans
