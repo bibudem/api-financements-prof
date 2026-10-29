@@ -1,0 +1,9 @@
+node_modules/
+financements.json
+*.tmp
+.env
+
+# Données Synchro (personnelles) : on garde seulement le dossier vide
+data/*
+!data/.gitkeep
+docs

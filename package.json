@@ -1,0 +1,19 @@
+{
+  "name": "api-financements-prof",
+  "version": "1.0.0",
+  "description": "API des financements de recherche (Synchro Recherche) pour le répertoire des professeures et professeurs",
+  "main": "src/server.js",
+  "private": true,
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "generer": "node src/generer.js",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "sax": "^1.6.1"
+  }
+}
